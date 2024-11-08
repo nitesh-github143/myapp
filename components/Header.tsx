@@ -26,7 +26,17 @@ const Header = () => {
         <TabBarIcon name={"menu"} size={32} color={Colors.any.grey} />
         {headerData.map((item, index) => (
           <View key={index} style={[styles.item, { borderColor: item.border }]}>
-            <Image source={[item.icon]} style={styles.image} />
+            <Image
+              source={item.icon}
+              style={[
+                styles.image,
+                {
+                  width: index == 1 ? 30 : 20,
+                  height: index == 1 ? 30 : 20,
+                  marginBottom: index === 1 ? -5 : 0,
+                },
+              ]}
+            />
             <Text style={[styles.value, { color: item.textColor }]}>
               {item.value}
             </Text>
@@ -65,6 +75,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 20,
     marginLeft: 8,
+    height: 35,
   },
   value: {
     marginLeft: 8,
@@ -72,9 +83,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   image: {
-    width: 20,
-    height: 20,
-    resizeMode: "cover",
+    resizeMode: "contain",
   },
 });
 
