@@ -1,24 +1,12 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import {
-  StyleSheet,
-  Image,
-  Platform,
-  SafeAreaView,
-  Dimensions,
-  View,
-  Alert,
-} from "react-native";
+import { StyleSheet, Dimensions, View, Alert, ScrollView } from "react-native";
 
-import { Collapsible } from "@/components/Collapsible";
-import { ExternalLink } from "@/components/ExternalLink";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { useEffect, useState } from "react";
 import CatFactCard from "@/components/Card";
 import Button from "@/components/Button";
 import { Colors } from "@/constants/Colors";
 import CustomInput from "@/components/CustomInputBox";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 interface CatFact {
   fact: string;
@@ -71,64 +59,72 @@ export default function TabTwoScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.card}>
-        <CatFactCard fact={fact.fact} />
-        <Button
-          title="Get Fact"
-          onPress={() =>
-            get("https://catfact.ninja/fact", setFact, setLoading1)
-          }
-          loading={loading1}
-          style={styles.btn}
-        />
-      </View>
-      <View style={styles.card}>
-        <CustomInput
-          placeholder="Enter name here ..."
-          value={text}
-          onChangeText={setText}
-          onFocus={() => setUserInfo(null)}
-        />
-        {userInfo ? (
-          <View>
-            {userInfo != null && (
-              <>
-                <ThemedText type="title">Hello, {userInfo.name}!</ThemedText>
-                <ThemedText type="title">
-                  Your Predicted Gender is , {userInfo.gender}!
-                </ThemedText>
-                <ThemedText type="title">
-                  Your Predicted Gender probability , {userInfo.probability}!
-                </ThemedText>
-              </>
-            )}
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <ScrollView>
+          <View style={styles.card}>
+            <CatFactCard fact={fact.fact} />
+            <Button
+              title="Get Fact"
+              onPress={() =>
+                get("https://catfact.ninja/fact", setFact, setLoading1)
+              }
+              loading={loading1}
+              style={styles.btn}
+            />
           </View>
-        ) : null}
-        <Button
-          title="Get Fact"
-          onPress={() => {
-            if (text.trim() === "") {
-              Alert.alert("Please fill the name");
-              return;
-            }
-            get(
-              `https://api.genderize.io/?name=${text}`,
-              setUserInfo,
-              setLoading2
-            );
-          }}
-          loading={loading2}
-          style={styles.btn}
-        />
-      </View>
-    </SafeAreaView>
+          <View style={styles.card}>
+            <CustomInput
+              placeholder="Enter name here ..."
+              value={text}
+              onChangeText={setText}
+              onFocus={() => setUserInfo(null)}
+            />
+            {userInfo ? (
+              <View>
+                {userInfo != null && (
+                  <>
+                    <ThemedText type="title">
+                      Hello, {userInfo.name}!
+                    </ThemedText>
+                    <ThemedText type="title">
+                      Your Predicted Gender is , {userInfo.gender}!
+                    </ThemedText>
+                    <ThemedText type="title">
+                      Your Predicted Gender probability , {userInfo.probability}
+                      !
+                    </ThemedText>
+                  </>
+                )}
+              </View>
+            ) : null}
+            <Button
+              title="Get Fact"
+              onPress={() => {
+                if (text.trim() === "") {
+                  Alert.alert("Please fill the name");
+                  return;
+                }
+                get(
+                  `https://api.genderize.io/?name=${text}`,
+                  setUserInfo,
+                  setLoading2
+                );
+              }}
+              loading={loading2}
+              style={styles.btn}
+            />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Colors.any.white,
   },
   btn: {
     margin: 10,
